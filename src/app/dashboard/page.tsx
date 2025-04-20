@@ -1,3 +1,5 @@
+
+"use client";
 import { AppSidebar } from "@/components/app-sidebar"
 import { ModeToggle } from "@/components/theme-toggle"
 import {
@@ -15,7 +17,10 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 
+import useAuth from "@/hooks/use-auth";
+
 export default function Page() {
+  useAuth(); // 🔐 Protect this route
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -55,3 +60,4 @@ export default function Page() {
     </SidebarProvider>
   )
 }
+
