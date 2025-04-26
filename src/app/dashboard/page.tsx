@@ -1,7 +1,6 @@
-
 "use client";
-import { AppSidebar } from "@/components/app-sidebar"
-import { ModeToggle } from "@/components/theme-toggle"
+import { AppSidebar } from "@/components/app-sidebar";
+import { ModeToggle } from "@/components/theme-toggle";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,18 +8,16 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-import { Separator } from "@/components/ui/separator"
+} from "@/components/ui/breadcrumb";
+import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
-
-import useAuth from "@/hooks/use-auth";
+} from "@/components/ui/sidebar";
 
 export default function Page() {
-  useAuth(); // 🔐 Protect this route
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -36,9 +33,7 @@ export default function Page() {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Building Your Application
-                  </BreadcrumbLink>
+                  <BreadcrumbLink href="#">Building Your Application</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
@@ -58,6 +53,5 @@ export default function Page() {
         </div>
       </SidebarInset>
     </SidebarProvider>
-  )
+  );
 }
-
