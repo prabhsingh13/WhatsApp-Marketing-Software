@@ -27,27 +27,49 @@ export function LoginForm({
     setLoading(true)
 
     try {
-      const res = await fetch("/api/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
+      // const res = await fetch("/api/users/login", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     email,
+      //     password,
+      //   }),
+      // })
+
+      // const data = await res.json()
+
+      // if (res.ok) {
+      //   toast.success("Logged in successfully!")
+
+      //   // Redirect to dashboard
+      //   router.push("/dashboard")
+      // } else {
+      //   toast.error(data.message || "Login failed. Please try again.")
+      // }
+
+      /**
+       * using next auth
+       */
+
+      const res = await signIn('credentials', {
+        redirect: false,
+        email,
+        password,
       })
 
-      const data = await res.json()
+      console.log(`res --> `, res); // DEBUGGING
 
-      if (res.ok) {
-        toast.success("Logged in successfully!")
-
-        // Redirect to dashboard
-        router.push("/dashboard")
+      if (res?.error) {
+        // Handle error
+        toast.error('Login failed! Please check your credentials.')
       } else {
-        toast.error(data.message || "Login failed. Please try again.")
+        // Successful login
+        toast.success('Login successful!')
+        router.push('/dashboard') // Navigate to dashboard after login
       }
+
     } catch (err) {
       console.error("Login error:", err)
       toast.error("Something went wrong. Please try again.")
@@ -60,14 +82,14 @@ export function LoginForm({
     setLoading(true)
     try {
       // Initiate Google login
-      const result = await signIn("google", {
-        callbackUrl: "/dashboard?loggedIn=google",
-      })
+      signIn("google")
 
-      if (result?.error) {
-        toast.error("Google sign-in failed. Please try again.")
-      }
+
+      // if (result?.error) {
+      //   toast.error("Google sign-in failed. Please try again.")
+      // }
     } catch (error) {
+      console.log("error in google login -> ", error)
       toast.error("Google sign-in failed. Please try again.")
     } finally {
       setLoading(false)
@@ -126,9 +148,9 @@ export function LoginForm({
                     onClick={() => setPasswordVisible(!passwordVisible)}
                   >
                     {passwordVisible ? (
-                      <EyeOff size={20} />
-                    ) : (
                       <Eye size={20} />
+                    ) : (
+                      <EyeOff size={20} />
                     )}
                   </button>
                 </div>

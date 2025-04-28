@@ -1,30 +1,31 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { getToken } from 'next-auth/jwt';
 
-export function middleware(request: NextRequest) {
-  const path = request.nextUrl.pathname
+export async function middleware(request: NextRequest) {
+  const path = request.nextUrl.pathname;
 
-  // Paths that can be accessed publicly
-  const isPublicPath = path === '/login' || path === '/register' || path === '/'
+  // Public paths
+  const isPublicPath = path === '/' || path === '/login' || path === '/register';
 
-  // Get the token from cookies
-  const token = request.cookies.get('token')?.value || ''
+  // Get the user token from NextAuth
+  const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
 
-  // If the user is logged in and tries to visit public paths, redirect to dashboard
+  // If user is logged in and tries to access public pages → redirect to dashboard
   if (isPublicPath && token) {
-    return NextResponse.redirect(new URL('/dashboard', request.nextUrl))
+    return NextResponse.redirect(new URL('/dashboard', request.nextUrl));
   }
 
-  // If the user is not logged in and tries to access protected paths, redirect to login
+  // If user is not logged in and tries to access protected pages → redirect to login
   if (!isPublicPath && !token) {
-    return NextResponse.redirect(new URL('/login', request.nextUrl))
+    return NextResponse.redirect(new URL('/login', request.nextUrl));
   }
 
-  // Continue with the request if no conditions match
-  return NextResponse.next()
+  // Otherwise, continue
+  return NextResponse.next();
 }
 
-// Path matching configuration
+// Path matching config
 export const config = {
-  matcher: ['/', '/login', '/register', '/dashboard', '/dashboard/:path*'],
-}
+  matcher: ['/', '/login', '/register', '/dashboard/:path*'],
+};

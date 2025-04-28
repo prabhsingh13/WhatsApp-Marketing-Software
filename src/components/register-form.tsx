@@ -36,7 +36,7 @@ export function RegisterForm({
     setLoading(true)
     try {
       // Create user via email/password in MongoDB
-      const res = await fetch("/api/auth/register", {
+      const res = await fetch("/api/users/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fullName, username, email, password }),
@@ -51,6 +51,7 @@ export function RegisterForm({
       toast.success("Account created successfully!")
       router.push("/dashboard")
     } catch (error: any) {
+      console.log(`error --> `, error); // DEBUGGING
       toast.error(error.message)
     } finally {
       setLoading(false)
@@ -58,16 +59,21 @@ export function RegisterForm({
   }
 
   const handleGoogleSignup = async () => {
-    setLoading(true)
+    debugger;
+    setLoading(true);
     try {
-      // Initiate Google login via NextAuth.js
-      await signIn("google", { callbackUrl: "/dashboard?loggedIn=google" })
+      console.log('Attempting Google sign-in...');
+
+      signIn("google"); 
+      // await signIn('google', { callbackUrl: '/dashboard?loggedIn=google' });
+
     } catch (error) {
-      toast.error("Google Registration failed. Please try again later.")
+      toast.error('Google Registration failed. Please try again later.');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
+  
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -82,7 +88,7 @@ export function RegisterForm({
               height={10}
             />
           </div>
-          <form onSubmit={handleRegister} className="p-6 md:p-8">
+          <form onSubmit={handleRegister} className="p-6 md:p-8" autoComplete="off">
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">Create an account</h1>
