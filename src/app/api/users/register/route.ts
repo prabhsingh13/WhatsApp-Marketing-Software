@@ -63,7 +63,16 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 4. Hash Password
+    // 4. Check if user name is already exits or not
+    const existingUserWithSameUsername = await User.findOne({ username: username.toLowerCase() })
+    if (existingUserWithSameUsername) {
+      return NextResponse.json(
+        { success: false, message: 'User already exists with same username' },
+        { status: 400 }
+      )
+    }
+
+    // 5. Hash Password
     const salt = await bcryptjs.genSalt(10)
     const hashedPassword = await bcryptjs.hash(password, salt)
 

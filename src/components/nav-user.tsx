@@ -35,12 +35,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { signOut } from "next-auth/react"
 
 export function NavUser() {
   const { isMobile } = useSidebar()
   const router = useRouter()
   const [isModalOpen, setModalOpen] = useState(false)
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<any>({})
 
   useEffect(() => {
     const getUserDetails = async () => {
@@ -58,9 +59,20 @@ export function NavUser() {
 
   const handleLogout = async () => {
     try {
-      await axios.get('/api/users/logout')
-      toast.success("Logged out successfully!")
-      router.push("/")
+      // await axios.get('/api/users/logout')
+      // toast.success("Logged out successfully!")
+      // router.push("/")
+
+      /**
+       * Next auth
+       */
+      await signOut({
+        redirect: true, 
+        callbackUrl: "/"
+      })
+
+      toast.success("Logged out successfully!");
+
     } catch (error) {
       console.error("Logout error:", error)
       toast.error("Failed to logout!")
@@ -77,7 +89,7 @@ export function NavUser() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user?.avatar || ""} alt={user?.name || "User"} />
+                <AvatarImage src={user?.image || ""} alt={user?.name || "User"} key={user?.image} />
                 <AvatarFallback className="rounded-lg">
                   {user?.name?.[0] || "U"}
                 </AvatarFallback>
@@ -98,7 +110,7 @@ export function NavUser() {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user?.avatar || ""} alt={user?.name || "User"} />
+                  <AvatarImage src={user?.image || ""} alt={user?.name || "User"} key={user?.image} />
                   <AvatarFallback className="rounded-lg">
                     {user?.name?.[0] || "U"}
                   </AvatarFallback>
